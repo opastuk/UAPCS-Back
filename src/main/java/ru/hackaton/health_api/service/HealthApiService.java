@@ -5,12 +5,15 @@ import ru.hackaton.health_api.data.dto.DoctorInfoDTO;
 import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
 import ru.hackaton.health_api.data.dto.HospitalDTO;
 import ru.hackaton.health_api.data.dto.PatientInfoDTO;
+import ru.hackaton.health_api.data.dto.TasksDTO;
 import ru.hackaton.health_api.data.entities.DoctorScheduleEntity;
 import ru.hackaton.health_api.data.entities.HospitalEntity;
+import ru.hackaton.health_api.data.entities.TasksEntity;
 import ru.hackaton.health_api.data.repo.DoctorInfoRepo;
 import ru.hackaton.health_api.data.repo.DoctorScheduleRepo;
 import ru.hackaton.health_api.data.repo.HospitalRepo;
 import ru.hackaton.health_api.data.repo.PatientInfoRepo;
+import ru.hackaton.health_api.data.repo.TasksRepo;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,15 +26,18 @@ public class HealthApiService implements HealthApiClient {
     private PatientInfoRepo patientInfoRepo;
     private DoctorScheduleRepo doctorScheduleRepo;
     private HospitalRepo hospitalRepo;
+    private TasksRepo tasksRepo;
 
     public HealthApiService(DoctorInfoRepo doctorInfoRepo,
                             PatientInfoRepo patientInfoRepo,
                             DoctorScheduleRepo doctorScheduleRepo,
-                            HospitalRepo hospitalRepo) {
+                            HospitalRepo hospitalRepo,
+                            TasksRepo tasksRepo) {
         this.doctorInfoRepo = doctorInfoRepo;
         this.patientInfoRepo = patientInfoRepo;
         this.doctorScheduleRepo = doctorScheduleRepo;
         this.hospitalRepo = hospitalRepo;
+        this.tasksRepo = tasksRepo;
     }
 
     @Override
@@ -42,6 +48,11 @@ public class HealthApiService implements HealthApiClient {
     @Override
     public void registerDoctor(DoctorInfoDTO input) {
         doctorInfoRepo.save(input.convertToEntity());
+    }
+
+    @Override
+    public void registerTask(TasksDTO input) {
+        tasksRepo.save(input.convertToEntity());
     }
 
     @Override
@@ -56,7 +67,6 @@ public class HealthApiService implements HealthApiClient {
     public List<DoctorScheduleDTO> getScheduleByHospitalAndDate(int hospitalId, LocalDate date) {
         List<DoctorScheduleDTO> scheduleDtoList =
                 doctorScheduleRepo.findByHospitalIdAAndWorkDate(hospitalId, date)
-                        .get()
                         .stream()
                         .filter(DoctorScheduleEntity::isAvailable)
                         .map(DoctorScheduleEntity::convertToDto)
@@ -71,5 +81,12 @@ public class HealthApiService implements HealthApiClient {
 //        scheduleDtoList.forEach(dto -> dto.setDoctorName(doctors.get(dto.getDoctorId()).getName()));
 
         return scheduleDtoList;
+    }
+
+    @Override
+    public List<TasksDTO> getAllByDoctorIdAndDate(int doctorId, LocalDate date, boolean active) {
+        return tasksRepo.findAllByDoctorIdAndDate(doctorId, date, active).stream()
+                .map(TasksEntity::convertToDto)
+                .collect(Collectors.toList());
     }
 }

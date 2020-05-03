@@ -12,6 +12,7 @@ import ru.hackaton.health_api.data.dto.DoctorInfoDTO;
 import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
 import ru.hackaton.health_api.data.dto.HospitalDTO;
 import ru.hackaton.health_api.data.dto.PatientInfoDTO;
+import ru.hackaton.health_api.data.dto.TasksDTO;
 import ru.hackaton.health_api.service.HealthApiService;
 
 import javax.validation.Valid;
@@ -42,13 +43,30 @@ public class HealthApiController {
         service.registerPatient(input);
     }
 
+    @PostMapping("/tasks/create")
+    public void registerTask(@Valid @RequestBody TasksDTO input){
+        service.registerTask(input);
+    }
+
     @GetMapping("/hospitals/all")
     public List<HospitalDTO> getAllHospitals() {
         return service.getAllHospitals();
     }
 
     @GetMapping("/schedule/by-hospital-and-date")
-    public List<DoctorScheduleDTO> getAllDoctorsByHospital(@RequestParam int hospital_id, @RequestParam String date) {
-        return service.getScheduleByHospitalAndDate(hospital_id, LocalDate.parse(date, dateTimeFormatter));
+    public List<DoctorScheduleDTO> getAllDoctorsByHospital(
+            @RequestParam(name = "hospital_id") int hospitalId,
+            @RequestParam String date) {
+        return service.getScheduleByHospitalAndDate
+                (hospitalId, LocalDate.parse(date, dateTimeFormatter));
+    }
+
+    @GetMapping("/tasks/by-doctor-and-date")
+    public List<TasksDTO> getAllTasksByDoctorAndDate(
+            @RequestParam(name = "doctor_id") int doctorId,
+            @RequestParam String date,
+            @RequestParam boolean active) {
+        return service.getAllByDoctorIdAndDate(
+                doctorId, LocalDate.parse(date, dateTimeFormatter), active);
     }
 }

@@ -6,9 +6,8 @@ import ru.hackaton.health_api.data.entities.DoctorScheduleEntity;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface DoctorScheduleRepo extends CrudRepository<DoctorScheduleEntity, String> {
     @Query("select e from DoctorScheduleEntity e where e.hospitalId = :id and e.workDate = :date")
-    Optional<List<DoctorScheduleEntity>> findByHospitalIdAAndWorkDate(int id, LocalDate date);
+    List<DoctorScheduleEntity> findByHospitalIdAAndWorkDate(int id, LocalDate date);
 }
