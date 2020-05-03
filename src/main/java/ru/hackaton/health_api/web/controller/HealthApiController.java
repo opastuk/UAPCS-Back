@@ -1,6 +1,7 @@
 package ru.hackaton.health_api.web.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
 import ru.hackaton.health_api.data.dto.HospitalDTO;
 import ru.hackaton.health_api.data.dto.PatientInfoDTO;
 import ru.hackaton.health_api.data.dto.TasksDTO;
+import ru.hackaton.health_api.security.Permissions;
 import ru.hackaton.health_api.service.HealthApiService;
 
 import javax.validation.Valid;
@@ -27,23 +29,24 @@ import static ru.hackaton.health_api.env.Constants.dateTimeFormatter;
 @RequestMapping("/health-api")
 public class HealthApiController {
 
-    private HealthApiService service;
+    private final HealthApiService service;
 
     public HealthApiController(HealthApiService service) {
         this.service = service;
     }
 
-    @PostMapping("/doctors/create")
+    @PostMapping("/register/doctor")
     public void registerDoctor(@Valid @RequestBody DoctorInfoDTO input){
         service.registerDoctor(input);
     }
 
-    @PostMapping("/patients/create")
+    @PostMapping("/register/patient")
     public void registerPatient(@Valid @RequestBody PatientInfoDTO input){
         service.registerPatient(input);
     }
 
     @PostMapping("/tasks/create")
+    @Secured(Permissions.CREATE_TASK)
     public void registerTask(@Valid @RequestBody TasksDTO input){
         service.registerTask(input);
     }
@@ -53,6 +56,7 @@ public class HealthApiController {
         return service.getAllHospitals();
     }
 
+    @Secured(Permissions.READ)
     @GetMapping("/schedule/by-hospital-and-date")
     public List<DoctorScheduleDTO> getAllDoctorsByHospital(
             @RequestParam(name = "hospital_id") int hospitalId,
@@ -61,6 +65,7 @@ public class HealthApiController {
                 (hospitalId, LocalDate.parse(date, dateTimeFormatter));
     }
 
+    @Secured(Permissions.READ)
     @GetMapping("/tasks/by-doctor-and-date")
     public List<TasksDTO> getAllTasksByDoctorAndDate(
             @RequestParam(name = "doctor_id") int doctorId,

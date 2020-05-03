@@ -35,6 +35,13 @@ public class DoctorInfoEntity {
     private Integer hospitalId;
 
     public DoctorInfoDTO convertToDto(){
-        return new DoctorInfoDTO(id, name, birthDate, email, mobilePhone, hospitalId);
+        return DoctorInfoDTO.builder()
+                .id(id)
+                .name(name)
+                .birthDate(birthDate)
+                .email(email)
+                .mobilePhone(mobilePhone)
+                .hospitalId(hospitalId)
+                .build();
     }
 }

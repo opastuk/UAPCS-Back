@@ -1,6 +1,7 @@
 package ru.hackaton.health_api.service;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.hackaton.health_api.data.dto.DoctorInfoDTO;
 import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
 import ru.hackaton.health_api.data.dto.HospitalDTO;
@@ -14,6 +15,8 @@ import ru.hackaton.health_api.data.repo.DoctorScheduleRepo;
 import ru.hackaton.health_api.data.repo.HospitalRepo;
 import ru.hackaton.health_api.data.repo.PatientInfoRepo;
 import ru.hackaton.health_api.data.repo.TasksRepo;
+import ru.hackaton.health_api.data.repo.UserCredentialRepo;
+import ru.hackaton.health_api.exceptions.MyAlreadyCreatedException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,27 +30,42 @@ public class HealthApiService implements HealthApiClient {
     private DoctorScheduleRepo doctorScheduleRepo;
     private HospitalRepo hospitalRepo;
     private TasksRepo tasksRepo;
+    private UserCredentialRepo userCredentialRepo;
 
     public HealthApiService(DoctorInfoRepo doctorInfoRepo,
                             PatientInfoRepo patientInfoRepo,
                             DoctorScheduleRepo doctorScheduleRepo,
                             HospitalRepo hospitalRepo,
-                            TasksRepo tasksRepo) {
+                            TasksRepo tasksRepo,
+                            UserCredentialRepo userCredentialRepo) {
         this.doctorInfoRepo = doctorInfoRepo;
         this.patientInfoRepo = patientInfoRepo;
         this.doctorScheduleRepo = doctorScheduleRepo;
         this.hospitalRepo = hospitalRepo;
         this.tasksRepo = tasksRepo;
+        this.userCredentialRepo = userCredentialRepo;
+    }
+
+    private void checkUserAlreadyExists(String login) {
+        if (userCredentialRepo.findById(login).isPresent()) {
+            throw new MyAlreadyCreatedException("already created");
+        }
     }
 
     @Override
+    @Transactional
     public void registerPatient(PatientInfoDTO input) {
-        patientInfoRepo.save(input.convertToEntity());
+        checkUserAlreadyExists(input.getEmail());
+        userCredentialRepo.save(input.convertToUserCredentialEntity());
+        patientInfoRepo.save(input.convertToPatientEntity());
     }
 
     @Override
+    @Transactional
     public void registerDoctor(DoctorInfoDTO input) {
-        doctorInfoRepo.save(input.convertToEntity());
+        checkUserAlreadyExists(input.getEmail());
+        userCredentialRepo.save(input.convertToUserCredentialEntity());
+        doctorInfoRepo.save(input.convertToDoctorInfoEntity());
     }
 
     @Override

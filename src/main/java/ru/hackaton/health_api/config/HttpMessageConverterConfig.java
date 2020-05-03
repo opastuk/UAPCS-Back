@@ -1,4 +1,4 @@
-package ru.hackaton.health_api.data.config;
+package ru.hackaton.health_api.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
