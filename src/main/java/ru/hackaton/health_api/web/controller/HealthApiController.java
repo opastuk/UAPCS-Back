@@ -36,18 +36,18 @@ public class HealthApiController {
     }
 
     @PostMapping("/register/doctor")
-    public void registerDoctor(@Valid @RequestBody DoctorInfoDTO input){
+    public void registerDoctor(@Valid @RequestBody DoctorInfoDTO input) {
         service.registerDoctor(input);
     }
 
     @PostMapping("/register/patient")
-    public void registerPatient(@Valid @RequestBody PatientInfoDTO input){
+    public void registerPatient(@Valid @RequestBody PatientInfoDTO input) {
         service.registerPatient(input);
     }
 
     @PostMapping("/tasks/create")
     @Secured(Permissions.CREATE_TASK)
-    public void registerTask(@Valid @RequestBody TasksDTO input){
+    public void registerTask(@Valid @RequestBody TasksDTO input) {
         service.registerTask(input);
     }
 

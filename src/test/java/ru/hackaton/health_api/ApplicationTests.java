@@ -11,22 +11,22 @@ import ru.hackaton.health_api.data.repo.HospitalRepo;
 @SpringBootTest
 class ApplicationTests {
 
-	@Autowired
-	AddressRepo addressRepo;
+    @Autowired
+    AddressRepo addressRepo;
 
-	@Autowired
-	DoctorInfoRepo doctorInfoRepo;
+    @Autowired
+    DoctorInfoRepo doctorInfoRepo;
 
-	@Autowired
-	HospitalRepo hospitalRepo;
+    @Autowired
+    HospitalRepo hospitalRepo;
 
-	@Autowired
-	DoctorScheduleRepo doctorScheduleRepo;
+    @Autowired
+    DoctorScheduleRepo doctorScheduleRepo;
 
 
-	@Test
-	void contextLoads() {
-		System.out.println();
-	}
+    @Test
+    void contextLoads() {
+        System.out.println();
+    }
 
 }

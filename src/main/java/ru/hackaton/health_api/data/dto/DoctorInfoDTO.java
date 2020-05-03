@@ -44,7 +44,7 @@ public class DoctorInfoDTO {
     @NotNull
     private Integer hospitalId;
 
-    public DoctorInfoEntity convertToDoctorInfoEntity(){
+    public DoctorInfoEntity convertToDoctorInfoEntity() {
         return DoctorInfoEntity.builder()
                 .id(id)
                 .name(name)
@@ -55,7 +55,7 @@ public class DoctorInfoDTO {
                 .build();
     }
 
-    public UserCredentialEntity convertToUserCredentialEntity(){
+    public UserCredentialEntity convertToUserCredentialEntity() {
         return UserCredentialEntity.builder()
                 .email(email)
                 .password(password)

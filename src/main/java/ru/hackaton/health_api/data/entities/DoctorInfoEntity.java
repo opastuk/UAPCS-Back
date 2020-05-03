@@ -31,10 +31,10 @@ public class DoctorInfoEntity {
     @Column(name = "mobile_phone", nullable = false)
     private String mobilePhone;
 
-    @Column(name="hospital_id", nullable = false)
+    @Column(name = "hospital_id", nullable = false)
     private Integer hospitalId;
 
-    public DoctorInfoDTO convertToDto(){
+    public DoctorInfoDTO convertToDto() {
         return DoctorInfoDTO.builder()
                 .id(id)
                 .name(name)

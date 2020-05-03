@@ -37,7 +37,7 @@ public class TasksEntity {
     private String description;
     private boolean active;
 
-    public TasksDTO convertToDto(){
+    public TasksDTO convertToDto() {
         return TasksDTO.builder()
                 .id(id)
                 .patientOms(patientOms)

@@ -36,7 +36,7 @@ public class TasksDTO {
     @NotNull
     private boolean active = true;
 
-    public TasksEntity convertToEntity(){
+    public TasksEntity convertToEntity() {
         return TasksEntity.builder()
                 .id(id)
                 .patientOms(patientOms)

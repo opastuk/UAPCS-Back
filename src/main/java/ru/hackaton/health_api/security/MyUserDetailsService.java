@@ -39,7 +39,7 @@ public final class MyUserDetailsService implements UserDetailsService {
 
     }
 
-    private RoleEnum determineRoleById(int roleId){
+    private RoleEnum determineRoleById(int roleId) {
         if (roleId == 1) {
             return RoleEnum.DOCTOR;
         }

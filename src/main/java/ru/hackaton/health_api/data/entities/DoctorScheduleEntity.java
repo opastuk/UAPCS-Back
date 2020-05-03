@@ -42,7 +42,7 @@ public class DoctorScheduleEntity {
 
     private boolean available;
 
-    public DoctorScheduleDTO convertToDto(){
+    public DoctorScheduleDTO convertToDto() {
         return new DoctorScheduleDTO(workDate, doctorId, "", hospitalId, startTime, endTime, available);
     }
 }

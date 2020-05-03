@@ -46,7 +46,7 @@ public class PatientInfoDTO {
     @NotEmpty
     private String mobilePhone;
 
-    public PatientInfoEntity convertToPatientEntity(){
+    public PatientInfoEntity convertToPatientEntity() {
         return PatientInfoEntity.builder()
                 .omsPolis(omsPolis)
                 .name(name)
@@ -57,7 +57,7 @@ public class PatientInfoDTO {
                 .build();
     }
 
-    public UserCredentialEntity convertToUserCredentialEntity(){
+    public UserCredentialEntity convertToUserCredentialEntity() {
         return UserCredentialEntity.builder()
                 .email(email)
                 .password(password)

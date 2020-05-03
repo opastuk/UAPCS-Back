@@ -36,7 +36,7 @@ public class PatientInfoEntity {
     @Column(name = "mobile_phone", nullable = false)
     private String mobilePhone;
 
-    public PatientInfoDTO convertToDto(){
+    public PatientInfoDTO convertToDto() {
         return PatientInfoDTO.builder()
                 .omsPolis(omsPolis)
                 .name(name)

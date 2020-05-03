@@ -39,7 +39,7 @@ public class HospitalEntity {
     private boolean available;
 
 
-    public HospitalDTO convertToDto(){
+    public HospitalDTO convertToDto() {
         return new HospitalDTO(id, name, addressEntity.getAddress(), available);
     }
 }
