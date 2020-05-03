@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.hackaton.health_api.data.repo.AddressRepo;
-import ru.hackaton.health_api.data.repo.DoctorRepo;
-import ru.hackaton.health_api.data.repo.DoctorWorkplaceRepo;
+import ru.hackaton.health_api.data.repo.DoctorInfoRepo;
+import ru.hackaton.health_api.data.repo.DoctorScheduleRepo;
 import ru.hackaton.health_api.data.repo.HospitalRepo;
 
 @SpringBootTest
@@ -15,13 +15,13 @@ class ApplicationTests {
 	AddressRepo addressRepo;
 
 	@Autowired
-	DoctorRepo doctorRepo;
+	DoctorInfoRepo doctorInfoRepo;
 
 	@Autowired
 	HospitalRepo hospitalRepo;
 
 	@Autowired
-	DoctorWorkplaceRepo doctorWorkplaceRepo;
+	DoctorScheduleRepo doctorScheduleRepo;
 
 
 	@Test

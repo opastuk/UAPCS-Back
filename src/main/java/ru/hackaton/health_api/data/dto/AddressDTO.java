@@ -5,11 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
-public class DoctorWorkplaceDto {
+public class AddressDTO {
     private Integer id;
-    private Integer hospitalId;
+    private String address;
 }

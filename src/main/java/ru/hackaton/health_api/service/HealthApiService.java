@@ -1,39 +1,51 @@
 package ru.hackaton.health_api.service;
 
 import org.springframework.stereotype.Component;
-import ru.hackaton.health_api.data.dto.DoctorDto;
-import ru.hackaton.health_api.data.dto.HospitalDto;
-import ru.hackaton.health_api.data.entities.DoctorEntity;
-import ru.hackaton.health_api.data.entities.DoctorWorkplaceEntity;
+import ru.hackaton.health_api.data.dto.DoctorInfoDTO;
+import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
+import ru.hackaton.health_api.data.dto.HospitalDTO;
+import ru.hackaton.health_api.data.dto.PatientInfoDTO;
+import ru.hackaton.health_api.data.entities.DoctorScheduleEntity;
 import ru.hackaton.health_api.data.entities.HospitalEntity;
-import ru.hackaton.health_api.data.repo.AddressRepo;
-import ru.hackaton.health_api.data.repo.DoctorRepo;
-import ru.hackaton.health_api.data.repo.DoctorWorkplaceRepo;
+import ru.hackaton.health_api.data.repo.DoctorInfoRepo;
+import ru.hackaton.health_api.data.repo.DoctorScheduleRepo;
 import ru.hackaton.health_api.data.repo.HospitalRepo;
+import ru.hackaton.health_api.data.repo.PatientInfoRepo;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class HealthApiService implements HealthApiClient {
 
-    private AddressRepo addressRepo;
-    private DoctorRepo doctorRepo;
-    private DoctorWorkplaceRepo doctorWorkplaceRepo;
+    private DoctorInfoRepo doctorInfoRepo;
+    private PatientInfoRepo patientInfoRepo;
+    private DoctorScheduleRepo doctorScheduleRepo;
     private HospitalRepo hospitalRepo;
 
-    public HealthApiService(AddressRepo addressRepo,
-                            DoctorRepo doctorRepo,
-                            DoctorWorkplaceRepo doctorWorkplaceRepo,
+    public HealthApiService(DoctorInfoRepo doctorInfoRepo,
+                            PatientInfoRepo patientInfoRepo,
+                            DoctorScheduleRepo doctorScheduleRepo,
                             HospitalRepo hospitalRepo) {
-        this.addressRepo = addressRepo;
-        this.doctorRepo = doctorRepo;
-        this.doctorWorkplaceRepo = doctorWorkplaceRepo;
+        this.doctorInfoRepo = doctorInfoRepo;
+        this.patientInfoRepo = patientInfoRepo;
+        this.doctorScheduleRepo = doctorScheduleRepo;
         this.hospitalRepo = hospitalRepo;
     }
 
     @Override
-    public List<HospitalDto> getAllHospitals() {
+    public void registerPatient(PatientInfoDTO input) {
+        patientInfoRepo.save(input.convertToEntity());
+    }
+
+    @Override
+    public void registerDoctor(DoctorInfoDTO input) {
+        doctorInfoRepo.save(input.convertToEntity());
+    }
+
+    @Override
+    public List<HospitalDTO> getAllHospitals() {
         return ((List<HospitalEntity>) hospitalRepo.findAll()).stream()
                 .filter(HospitalEntity::isAvailable)
                 .map(HospitalEntity::convertToDto)
@@ -41,18 +53,23 @@ public class HealthApiService implements HealthApiClient {
     }
 
     @Override
-    public List<DoctorDto> getAllDoctorsByHospital(int hospitalId) {
-        List<Integer> doctorIdList =
-                doctorWorkplaceRepo.findByHospitalId(hospitalId)
+    public List<DoctorScheduleDTO> getScheduleByHospitalAndDate(int hospitalId, LocalDate date) {
+        List<DoctorScheduleDTO> scheduleDtoList =
+                doctorScheduleRepo.findByHospitalIdAAndWorkDate(hospitalId, date)
                         .get()
                         .stream()
-                        .filter(entity -> entity.getHospitalId() == hospitalId)
-                        .map(DoctorWorkplaceEntity::getId)
+                        .filter(DoctorScheduleEntity::isAvailable)
+                        .map(DoctorScheduleEntity::convertToDto)
                         .collect(Collectors.toList());
 
-        return doctorRepo.findAllByIdList(doctorIdList)
-                .get()
-                .stream().map(DoctorEntity::convertToDto)
-                .collect(Collectors.toList());
+//        Map<Integer, DoctorEntity> doctors = new HashMap<>();
+//
+//        scheduleDtoList.stream()
+//                .map(DoctorScheduleDto::getDoctorId)
+//                .forEach(id -> doctors.put(id, doctorRepo.findById(id).get()));
+//
+//        scheduleDtoList.forEach(dto -> dto.setDoctorName(doctors.get(dto.getDoctorId()).getName()));
+
+        return scheduleDtoList;
     }
 }

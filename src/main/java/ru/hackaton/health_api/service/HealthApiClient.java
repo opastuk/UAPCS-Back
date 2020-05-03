@@ -1,15 +1,21 @@
 package ru.hackaton.health_api.service;
 
-import ru.hackaton.health_api.data.dto.DoctorDto;
-import ru.hackaton.health_api.data.dto.HospitalDto;
-import ru.hackaton.health_api.data.entities.HospitalEntity;
+import ru.hackaton.health_api.data.dto.DoctorInfoDTO;
+import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
+import ru.hackaton.health_api.data.dto.HospitalDTO;
+import ru.hackaton.health_api.data.dto.PatientInfoDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface HealthApiClient {
 
-    List<HospitalDto> getAllHospitals();
+    void registerPatient(PatientInfoDTO entity);
 
-    List<DoctorDto> getAllDoctorsByHospital(int hospitalId);
+    void registerDoctor(DoctorInfoDTO entity);
+
+    List<HospitalDTO> getAllHospitals();
+
+    List<DoctorScheduleDTO> getScheduleByHospitalAndDate(int hospitalId, LocalDate date);
 
 }

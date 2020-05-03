@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ru.hackaton.health_api.data.dto.HospitalDto;
+import ru.hackaton.health_api.data.dto.HospitalDTO;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,8 +28,8 @@ public class HospitalEntity {
     @Column(nullable = false)
     private Integer id;
 
-//    @Column(name = "address_id", nullable = false)
-//    private Integer addressId;
+    @Column(nullable = false)
+    private String name;
 
     @OneToOne
     @JoinColumn(name = "address_id", referencedColumnName = "id")
@@ -39,7 +39,7 @@ public class HospitalEntity {
     private boolean available;
 
 
-    public HospitalDto convertToDto(){
-        return new HospitalDto(id, addressEntity.getAddress(), available);
+    public HospitalDTO convertToDto(){
+        return new HospitalDTO(id, name, addressEntity.getAddress(), available);
     }
 }

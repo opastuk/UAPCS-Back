@@ -3,14 +3,22 @@ package ru.hackaton.health_api.web.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.hackaton.health_api.data.dto.DoctorDto;
-import ru.hackaton.health_api.data.dto.HospitalDto;
+import ru.hackaton.health_api.data.dto.DoctorInfoDTO;
+import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
+import ru.hackaton.health_api.data.dto.HospitalDTO;
+import ru.hackaton.health_api.data.dto.PatientInfoDTO;
 import ru.hackaton.health_api.service.HealthApiService;
 
+import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
+
+import static ru.hackaton.health_api.env.Constants.dateTimeFormatter;
 
 @RestController
 @Slf4j
@@ -24,13 +32,23 @@ public class HealthApiController {
         this.service = service;
     }
 
+    @PostMapping("/doctors/create")
+    public void registerDoctor(@Valid @RequestBody DoctorInfoDTO input){
+        service.registerDoctor(input);
+    }
+
+    @PostMapping("/patients/create")
+    public void registerPatient(@Valid @RequestBody PatientInfoDTO input){
+        service.registerPatient(input);
+    }
+
     @GetMapping("/hospitals/all")
-    public List<HospitalDto> getAllHospitals() {
+    public List<HospitalDTO> getAllHospitals() {
         return service.getAllHospitals();
     }
 
-    @GetMapping("/doctors/by-hospital/{id}")
-    public List<DoctorDto> getAllDoctorsByHospital(@PathVariable int id) {
-        return service.getAllDoctorsByHospital(id);
+    @GetMapping("/schedule/by-hospital-and-date")
+    public List<DoctorScheduleDTO> getAllDoctorsByHospital(@RequestParam int hospital_id, @RequestParam String date) {
+        return service.getScheduleByHospitalAndDate(hospital_id, LocalDate.parse(date, dateTimeFormatter));
     }
 }
