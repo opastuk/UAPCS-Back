@@ -1,0 +1,17 @@
+spring.profiles.active: prod
+server.port: 9000
+
+spring:
+  datasource:
+    prod:
+      # real database
+      url: jdbc:postgresql://217.182.75.97:5432/hackaton
+      username: postgres
+      password: password
+      driverClassName: org.postgresql.Driver
+    local:
+      # localhost database in docker container
+      url: jdbc:postgresql://localhost:5432/trade_center
+      username: postgres
+      password: password
+      driverClassName: org.postgresql.Driver
