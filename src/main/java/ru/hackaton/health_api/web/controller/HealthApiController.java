@@ -15,8 +15,10 @@ import ru.hackaton.health_api.data.dto.HospitalDTO;
 import ru.hackaton.health_api.data.dto.InstructionDTO;
 import ru.hackaton.health_api.data.dto.TasksDTO;
 import ru.hackaton.health_api.data.dto.TraumaDTO;
+import ru.hackaton.health_api.data.dto.UserCredentialDTO;
 import ru.hackaton.health_api.data.dto.UserInfoDTO;
 import ru.hackaton.health_api.data.patch_input.DoctorCommentInput;
+import ru.hackaton.health_api.security.MyUserDetailsService;
 import ru.hackaton.health_api.security.Permissions;
 import ru.hackaton.health_api.service.HealthApiService;
 
@@ -32,26 +34,34 @@ import static ru.hackaton.health_api.env.Constants.dateTimeFormatter;
 @RequestMapping("/health-api")
 public class HealthApiController {
 
-    private final HealthApiService service;
+    private final HealthApiService healthApiService;
+    private final MyUserDetailsService userDetailsService;
 
-    public HealthApiController(HealthApiService service) {
-        this.service = service;
+    public HealthApiController(HealthApiService healthApiService,
+                               MyUserDetailsService userDetailsService) {
+        this.healthApiService = healthApiService;
+        this.userDetailsService = userDetailsService;
+    }
+
+    @PostMapping("/login")
+    public UserInfoDTO login(@Valid @RequestBody UserCredentialDTO input) {
+        return userDetailsService.login(input);
     }
 
     @PostMapping("/register/user")
     public void registerDoctor(@Valid @RequestBody UserInfoDTO input) {
-        service.registerUser(input);
+        healthApiService.registerUser(input);
     }
 
     @PostMapping("/tasks/create")
     @Secured(Permissions.CREATE_TASK)
     public void registerTask(@Valid @RequestBody TasksDTO input) {
-        service.registerTask(input);
+        healthApiService.registerTask(input);
     }
 
     @GetMapping("/hospitals/all")
     public List<HospitalDTO> getAllHospitals() {
-        return service.getAllHospitals();
+        return healthApiService.getAllHospitals();
     }
 
     @Secured(Permissions.READ)
@@ -59,14 +69,14 @@ public class HealthApiController {
     public List<DoctorScheduleDTO> getAllDoctorsByHospital(
             @RequestParam(name = "hospital_id") int hospitalId,
             @RequestParam String date) {
-        return service.getScheduleByHospitalAndDate
+        return healthApiService.getScheduleByHospitalAndDate
                 (hospitalId, LocalDate.parse(date, dateTimeFormatter));
     }
 
     @Secured(Permissions.READ)
     @GetMapping("/tasks/all")
     public List<TasksDTO> getAllTasks() {
-        return service.getAllTasks();
+        return healthApiService.getAllTasks();
     }
 
     @Secured(Permissions.READ)
@@ -75,7 +85,7 @@ public class HealthApiController {
             @RequestParam(name = "doctor_id") int doctorId,
             @RequestParam String date,
             @RequestParam boolean active) {
-        return service.getAllByDoctorIdAndDateAndActive(
+        return healthApiService.getAllByDoctorIdAndDateAndActive(
                 doctorId, LocalDate.parse(date, dateTimeFormatter), active);
     }
 
@@ -84,31 +94,31 @@ public class HealthApiController {
     public List<TasksDTO> getAllTasksByPatientAndActive(
             @RequestParam(name = "patient_id") int patientId,
             @RequestParam boolean active) {
-        return service.getAllByPatientIdAndActive(patientId, active);
+        return healthApiService.getAllByPatientIdAndActive(patientId, active);
     }
 
     @Secured(Permissions.MODIFY_TASK)
     @PatchMapping("/tasks/set-comment")
     public void setDoctorComment(@Valid @RequestBody DoctorCommentInput input) {
-        service.setDoctorComment(input.getTaskId(), input.getComment());
+        healthApiService.setDoctorComment(input.getTaskId(), input.getComment());
     }
 
     @Secured(Permissions.MODIFY_TASK)
     @PatchMapping("/tasks/close")
     public void closeTask(@RequestParam int id) {
-        service.closeTask(id);
+        healthApiService.closeTask(id);
     }
 
     @Secured(Permissions.READ)
     @GetMapping("/traumas/all")
     public List<TraumaDTO> getAllTraumas() {
-        return service.getAllTraumaList();
+        return healthApiService.getAllTraumaList();
     }
 
     @Secured(Permissions.READ)
     @GetMapping("/instructions/by-trauma")
     public List<InstructionDTO> getAllInstructionsByTrauma(
             @RequestParam(name = "trauma_id") int traumaId) {
-        return service.getAllInstructionsByTraumaId(traumaId);
+        return healthApiService.getAllInstructionsByTraumaId(traumaId);
     }
 }

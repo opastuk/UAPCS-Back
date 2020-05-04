@@ -11,4 +11,6 @@ import java.util.Set;
 public interface UserInfoRepo extends CrudRepository<UserInfoEntity, Integer> {
     @Query("select e from UserInfoEntity e where e.id in :userIdList")
     Optional<List<UserInfoEntity>> findAllByIdSet(Set<Integer> userIdList);
+
+    UserInfoEntity findByEmail(String email);
 }

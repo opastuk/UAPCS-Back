@@ -9,8 +9,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import ru.hackaton.health_api.data.dto.UserCredentialDTO;
+import ru.hackaton.health_api.data.dto.UserInfoDTO;
 import ru.hackaton.health_api.data.entities.UserCredentialEntity;
 import ru.hackaton.health_api.data.repo.UserCredentialRepo;
+import ru.hackaton.health_api.data.repo.UserInfoRepo;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +24,25 @@ public final class MyUserDetailsService implements UserDetailsService {
     private final PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     private final UserCredentialRepo userCredentialRepo;
+    private final UserInfoRepo userInfoRepo;
 
-    public MyUserDetailsService(UserCredentialRepo userCredentialRepo) {
+    public MyUserDetailsService(UserCredentialRepo userCredentialRepo,
+                                UserInfoRepo userInfoRepo) {
         this.userCredentialRepo = userCredentialRepo;
+        this.userInfoRepo = userInfoRepo;
+    }
+
+    public UserInfoDTO login(UserCredentialDTO input) {
+        Optional<UserCredentialEntity> entity = userCredentialRepo.findById(input.getEmail());
+        if (!entity.isPresent()) {
+            throw new BadCredentialsException("Invalid user");
+        }
+
+        if (entity.get().getPassword().equals(input.getPassword())) {
+            return userInfoRepo.findByEmail(input.getEmail()).convertToDto();
+        }
+
+        throw new BadCredentialsException("Invalid user");
     }
 
     @Override

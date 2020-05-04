@@ -32,6 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(
+                        "/health-api/login",
                         "/health-api/register/*",
                         "/health-api/hospitals/all").permitAll()
                 .anyRequest().authenticated()

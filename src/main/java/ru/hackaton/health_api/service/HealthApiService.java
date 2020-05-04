@@ -53,22 +53,11 @@ public class HealthApiService implements HealthApiClient {
         this.traumaRepo = traumaRepo;
     }
 
-    private void checkUserAlreadyExists(String login) {
-        if (userCredentialRepo.findById(login).isPresent()) {
-            throw new MyAlreadyCreatedException("already created");
-        }
-    }
-
-    private void checkTaskExists(int taskId) {
-        if (!tasksRepo.findById(taskId).isPresent()) {
-            throw new MyAlreadyCreatedException("task doesn't exist");
-        }
-    }
 
     @Override
     @Transactional
     public void registerUser(UserInfoDTO input) {
-        checkUserAlreadyExists(input.getEmail());
+        checkUserAlreadyExists(input.getEmail(), input.getId());
         userCredentialRepo.save(input.convertToUserCredentialEntity());
         userInfoRepo.save(input.convertToUserInfoEntity());
     }
@@ -145,5 +134,17 @@ public class HealthApiService implements HealthApiClient {
         return instructionRepo.findAllByTraumaId(traumaId).stream()
                 .map(InstructionEntity::convertToDTO)
                 .collect(Collectors.toList());
+    }
+
+    private void checkUserAlreadyExists(String login, int id) {
+        if (userCredentialRepo.findById(login).isPresent() || userInfoRepo.findById(id).isPresent()) {
+            throw new MyAlreadyCreatedException("already created");
+        }
+    }
+
+    private void checkTaskExists(int taskId) {
+        if (!tasksRepo.findById(taskId).isPresent()) {
+            throw new MyAlreadyCreatedException("task doesn't exist");
+        }
     }
 }
