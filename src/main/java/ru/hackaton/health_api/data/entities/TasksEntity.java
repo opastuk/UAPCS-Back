@@ -37,6 +37,11 @@ public class TasksEntity {
     private String description;
     private boolean active;
 
+    @Column(name = "doctor_comment", nullable = false)
+    private String doctorComment;
+
+    private boolean viewed;
+
     public TasksDTO convertToDto() {
         return TasksDTO.builder()
                 .id(id)
@@ -45,6 +50,8 @@ public class TasksEntity {
                 .date(date)
                 .description(description)
                 .active(active)
+                .doctorComment(doctorComment)
+                .viewed(viewed)
                 .build();
     }
 }

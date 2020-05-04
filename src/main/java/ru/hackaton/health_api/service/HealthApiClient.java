@@ -21,5 +21,11 @@ public interface HealthApiClient {
 
     List<DoctorScheduleDTO> getScheduleByHospitalAndDate(int hospitalId, LocalDate date);
 
-    List<TasksDTO> getAllByDoctorIdAndDate(int doctorId, LocalDate date, boolean active);
+    List<TasksDTO> getAllByDoctorIdAndDateAndActive(int doctorId, LocalDate date, boolean active);
+
+    List<TasksDTO> getAllByPatientOmsAndActive(int patientOms, boolean active);
+
+    void setDoctorComment(int taskId, String doctorComment);
+
+    void closeTask(int taskId);
 }

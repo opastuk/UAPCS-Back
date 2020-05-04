@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
 import ru.hackaton.health_api.data.dto.HospitalDTO;
 import ru.hackaton.health_api.data.dto.PatientInfoDTO;
 import ru.hackaton.health_api.data.dto.TasksDTO;
+import ru.hackaton.health_api.data.patch_input.DoctorCommentInput;
 import ru.hackaton.health_api.security.Permissions;
 import ru.hackaton.health_api.service.HealthApiService;
 
@@ -67,11 +69,31 @@ public class HealthApiController {
 
     @Secured(Permissions.READ)
     @GetMapping("/tasks/by-doctor-and-date")
-    public List<TasksDTO> getAllTasksByDoctorAndDate(
+    public List<TasksDTO> getAllTasksByDoctorAndDateAndActive(
             @RequestParam(name = "doctor_id") int doctorId,
             @RequestParam String date,
             @RequestParam boolean active) {
-        return service.getAllByDoctorIdAndDate(
+        return service.getAllByDoctorIdAndDateAndActive(
                 doctorId, LocalDate.parse(date, dateTimeFormatter), active);
+    }
+
+    @Secured(Permissions.READ)
+    @GetMapping("/tasks/by-patient")
+    public List<TasksDTO> getAllTasksByPatientAndActive(
+            @RequestParam(name = "patient_oms") int patientOms,
+            @RequestParam boolean active) {
+        return service.getAllByPatientOmsAndActive(patientOms, active);
+    }
+
+    @Secured(Permissions.MODIFY_TASK)
+    @PatchMapping("/tasks/set-comment")
+    public void setDoctorComment(@Valid @RequestBody DoctorCommentInput input) {
+        service.setDoctorComment(input.getTaskId(), input.getComment());
+    }
+
+    @Secured(Permissions.MODIFY_TASK)
+    @PatchMapping("/tasks/close")
+    public void closeTask(@RequestParam int id) {
+        service.closeTask(id);
     }
 }
