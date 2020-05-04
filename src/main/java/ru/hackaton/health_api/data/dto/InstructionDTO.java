@@ -15,14 +15,13 @@ import ru.hackaton.health_api.data.entities.TraumaEntity;
 public class InstructionDTO {
     private Integer id;
     private String description;
-    private Integer traumaId;
     private String traumaDescription;
 
     public InstructionEntity convertToEntity() {
         return InstructionEntity.builder()
                 .id(id)
                 .description(description)
-                .traumaEntity(new TraumaEntity(traumaId, traumaDescription))
+                .traumaEntity(new TraumaEntity(null, traumaDescription))
                 .build();
     }
 }

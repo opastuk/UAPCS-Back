@@ -99,6 +99,13 @@ public class HealthApiService implements HealthApiClient {
     }
 
     @Override
+    public List<TasksDTO> getAllTasks() {
+        return ((List<TasksEntity>) tasksRepo.findAll()).stream()
+                .map(TasksEntity::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<TasksDTO> getAllByDoctorIdAndDateAndActive(int doctorId, LocalDate date, boolean active) {
         return tasksRepo.findAllByDoctorIdAndDateAndActive(doctorId, date, active).stream()
                 .map(TasksEntity::convertToDto)

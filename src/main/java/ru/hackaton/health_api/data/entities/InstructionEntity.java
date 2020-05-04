@@ -40,7 +40,6 @@ public class InstructionEntity {
         return InstructionDTO.builder()
                 .id(id)
                 .description(description)
-                .traumaId(traumaEntity.getId())
                 .traumaDescription(traumaEntity.getDescription())
                 .build();
     }

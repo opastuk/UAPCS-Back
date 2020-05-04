@@ -20,6 +20,8 @@ public interface HealthApiClient {
 
     List<DoctorScheduleDTO> getScheduleByHospitalAndDate(int hospitalId, LocalDate date);
 
+    List<TasksDTO> getAllTasks();
+
     List<TasksDTO> getAllByDoctorIdAndDateAndActive(int doctorId, LocalDate date, boolean active);
 
     List<TasksDTO> getAllByPatientIdAndActive(int patientId, boolean active);

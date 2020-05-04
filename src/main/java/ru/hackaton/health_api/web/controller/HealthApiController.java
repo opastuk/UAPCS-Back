@@ -64,6 +64,12 @@ public class HealthApiController {
     }
 
     @Secured(Permissions.READ)
+    @GetMapping("/tasks/all")
+    public List<TasksDTO> getAllTasks() {
+        return service.getAllTasks();
+    }
+
+    @Secured(Permissions.READ)
     @GetMapping("/tasks/by-doctor-and-date")
     public List<TasksDTO> getAllTasksByDoctorAndDateAndActive(
             @RequestParam(name = "doctor_id") int doctorId,
