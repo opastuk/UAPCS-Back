@@ -1,5 +1,6 @@
 package ru.hackaton.health_api.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,8 @@ import ru.hackaton.health_api.data.entities.TasksEntity;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+
+import static ru.hackaton.health_api.env.Constants.DATE_PATTERN;
 
 
 @AllArgsConstructor
@@ -27,6 +30,7 @@ public class TasksDTO {
     private Integer doctorId;
 
     @NotNull
+    @JsonFormat(pattern = DATE_PATTERN)
     private LocalDate date;
 
     @NotEmpty

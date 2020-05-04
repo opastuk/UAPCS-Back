@@ -1,5 +1,6 @@
 package ru.hackaton.health_api.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+
+import static ru.hackaton.health_api.env.Constants.DATE_PATTERN;
 
 
 @AllArgsConstructor
@@ -26,6 +29,7 @@ public class UserInfoDTO {
     private String name;
 
     @NotNull
+    @JsonFormat(pattern = DATE_PATTERN)
     private LocalDate birthDate;
 
     @NotEmpty

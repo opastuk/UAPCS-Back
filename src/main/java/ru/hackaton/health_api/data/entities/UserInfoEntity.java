@@ -12,13 +12,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
+import static ru.hackaton.health_api.env.Constants.SCHEMA_NAME;
+import static ru.hackaton.health_api.env.Constants.USER_INFO_TABLE_NAME;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Entity
 @Builder
-@Table(name = "user_info", schema = "health_api")
+@Table(name = USER_INFO_TABLE_NAME, schema = SCHEMA_NAME)
 public class UserInfoEntity {
     @Id
     @Column(name = "id", nullable = false)

@@ -2,7 +2,9 @@ package ru.hackaton.health_api.service;
 
 import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
 import ru.hackaton.health_api.data.dto.HospitalDTO;
+import ru.hackaton.health_api.data.dto.InstructionDTO;
 import ru.hackaton.health_api.data.dto.TasksDTO;
+import ru.hackaton.health_api.data.dto.TraumaDTO;
 import ru.hackaton.health_api.data.dto.UserInfoDTO;
 
 import java.time.LocalDate;
@@ -25,4 +27,8 @@ public interface HealthApiClient {
     void setDoctorComment(int taskId, String doctorComment);
 
     void closeTask(int taskId);
+
+    List<TraumaDTO> getAllTraumaList();
+
+    List<InstructionDTO> getAllInstructionsByTraumaId(int traumaId);
 }

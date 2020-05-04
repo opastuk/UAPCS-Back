@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
 import ru.hackaton.health_api.data.dto.HospitalDTO;
+import ru.hackaton.health_api.data.dto.InstructionDTO;
 import ru.hackaton.health_api.data.dto.TasksDTO;
+import ru.hackaton.health_api.data.dto.TraumaDTO;
 import ru.hackaton.health_api.data.dto.UserInfoDTO;
 import ru.hackaton.health_api.data.patch_input.DoctorCommentInput;
 import ru.hackaton.health_api.security.Permissions;
@@ -89,5 +91,18 @@ public class HealthApiController {
     @PatchMapping("/tasks/close")
     public void closeTask(@RequestParam int id) {
         service.closeTask(id);
+    }
+
+    @Secured(Permissions.READ)
+    @GetMapping("/traumas/all")
+    public List<TraumaDTO> getAllTraumas() {
+        return service.getAllTraumaList();
+    }
+
+    @Secured(Permissions.READ)
+    @GetMapping("/instructions/by-trauma")
+    public List<InstructionDTO> getAllInstructionsByTrauma(
+            @RequestParam(name = "trauma_id") int traumaId) {
+        return service.getAllInstructionsByTraumaId(traumaId);
     }
 }

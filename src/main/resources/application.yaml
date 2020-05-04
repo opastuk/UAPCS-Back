@@ -11,7 +11,7 @@ spring:
       driverClassName: org.postgresql.Driver
     local:
       # localhost database in docker container
-      url: jdbc:postgresql://localhost:5432/trade_center
+      url: jdbc:postgresql://localhost:5432/hackaton
       username: postgres
       password: password
       driverClassName: org.postgresql.Driver

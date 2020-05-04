@@ -15,13 +15,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import static ru.hackaton.health_api.env.Constants.HOSPITAL_TABLE_NAME;
+import static ru.hackaton.health_api.env.Constants.SCHEMA_NAME;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Entity
 @Builder
-@Table(name = "hospital_info", schema = "health_api")
+@Table(name = HOSPITAL_TABLE_NAME, schema = SCHEMA_NAME)
 public class HospitalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

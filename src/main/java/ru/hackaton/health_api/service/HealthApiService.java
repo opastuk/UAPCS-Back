@@ -4,14 +4,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
 import ru.hackaton.health_api.data.dto.HospitalDTO;
+import ru.hackaton.health_api.data.dto.InstructionDTO;
 import ru.hackaton.health_api.data.dto.TasksDTO;
+import ru.hackaton.health_api.data.dto.TraumaDTO;
 import ru.hackaton.health_api.data.dto.UserInfoDTO;
 import ru.hackaton.health_api.data.entities.DoctorScheduleEntity;
 import ru.hackaton.health_api.data.entities.HospitalEntity;
+import ru.hackaton.health_api.data.entities.InstructionEntity;
 import ru.hackaton.health_api.data.entities.TasksEntity;
+import ru.hackaton.health_api.data.entities.TraumaEntity;
 import ru.hackaton.health_api.data.repo.DoctorScheduleRepo;
 import ru.hackaton.health_api.data.repo.HospitalRepo;
+import ru.hackaton.health_api.data.repo.InstructionRepo;
 import ru.hackaton.health_api.data.repo.TasksRepo;
+import ru.hackaton.health_api.data.repo.TraumaRepo;
 import ru.hackaton.health_api.data.repo.UserCredentialRepo;
 import ru.hackaton.health_api.data.repo.UserInfoRepo;
 import ru.hackaton.health_api.exceptions.MyAlreadyCreatedException;
@@ -23,22 +29,28 @@ import java.util.stream.Collectors;
 @Component
 public class HealthApiService implements HealthApiClient {
 
-    private UserInfoRepo userInfoRepo;
-    private DoctorScheduleRepo doctorScheduleRepo;
-    private HospitalRepo hospitalRepo;
-    private TasksRepo tasksRepo;
-    private UserCredentialRepo userCredentialRepo;
+    private final UserInfoRepo userInfoRepo;
+    private final DoctorScheduleRepo doctorScheduleRepo;
+    private final HospitalRepo hospitalRepo;
+    private final TasksRepo tasksRepo;
+    private final UserCredentialRepo userCredentialRepo;
+    private final InstructionRepo instructionRepo;
+    private final TraumaRepo traumaRepo;
 
     public HealthApiService(UserInfoRepo userInfoRepo,
                             DoctorScheduleRepo doctorScheduleRepo,
                             HospitalRepo hospitalRepo,
                             TasksRepo tasksRepo,
-                            UserCredentialRepo userCredentialRepo) {
+                            UserCredentialRepo userCredentialRepo,
+                            InstructionRepo instructionRepo,
+                            TraumaRepo traumaRepo) {
         this.userInfoRepo = userInfoRepo;
         this.doctorScheduleRepo = doctorScheduleRepo;
         this.hospitalRepo = hospitalRepo;
         this.tasksRepo = tasksRepo;
         this.userCredentialRepo = userCredentialRepo;
+        this.instructionRepo = instructionRepo;
+        this.traumaRepo = traumaRepo;
     }
 
     private void checkUserAlreadyExists(String login) {
@@ -112,5 +124,19 @@ public class HealthApiService implements HealthApiClient {
     public void closeTask(int taskId) {
         checkTaskExists(taskId);
         tasksRepo.closeTask(taskId);
+    }
+
+    @Override
+    public List<TraumaDTO> getAllTraumaList() {
+        return ((List<TraumaEntity>) traumaRepo.findAll()).stream()
+                .map(TraumaEntity::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<InstructionDTO> getAllInstructionsByTraumaId(int traumaId) {
+        return instructionRepo.findAllByTraumaId(traumaId).stream()
+                .map(InstructionEntity::convertToDTO)
+                .collect(Collectors.toList());
     }
 }

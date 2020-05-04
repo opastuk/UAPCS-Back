@@ -1,5 +1,6 @@
 package ru.hackaton.health_api.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import static ru.hackaton.health_api.env.Constants.DATE_PATTERN;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +24,7 @@ public class DoctorScheduleDTO {
     @Setter
     private String doctorName;
     private Integer hospitalId;
+    @JsonFormat(pattern = DATE_PATTERN)
     private LocalTime startTime;
     private LocalTime endTime;
     private boolean available;
