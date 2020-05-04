@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.hackaton.health_api.data.dto.DoctorInfoDTO;
 import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
 import ru.hackaton.health_api.data.dto.HospitalDTO;
-import ru.hackaton.health_api.data.dto.PatientInfoDTO;
 import ru.hackaton.health_api.data.dto.TasksDTO;
+import ru.hackaton.health_api.data.dto.UserInfoDTO;
 import ru.hackaton.health_api.data.patch_input.DoctorCommentInput;
 import ru.hackaton.health_api.security.Permissions;
 import ru.hackaton.health_api.service.HealthApiService;
@@ -37,14 +36,9 @@ public class HealthApiController {
         this.service = service;
     }
 
-    @PostMapping("/register/doctor")
-    public void registerDoctor(@Valid @RequestBody DoctorInfoDTO input) {
-        service.registerDoctor(input);
-    }
-
-    @PostMapping("/register/patient")
-    public void registerPatient(@Valid @RequestBody PatientInfoDTO input) {
-        service.registerPatient(input);
+    @PostMapping("/register/user")
+    public void registerDoctor(@Valid @RequestBody UserInfoDTO input) {
+        service.registerUser(input);
     }
 
     @PostMapping("/tasks/create")
@@ -80,9 +74,9 @@ public class HealthApiController {
     @Secured(Permissions.READ)
     @GetMapping("/tasks/by-patient")
     public List<TasksDTO> getAllTasksByPatientAndActive(
-            @RequestParam(name = "patient_oms") int patientOms,
+            @RequestParam(name = "patient_id") int patientId,
             @RequestParam boolean active) {
-        return service.getAllByPatientOmsAndActive(patientOms, active);
+        return service.getAllByPatientIdAndActive(patientId, active);
     }
 
     @Secured(Permissions.MODIFY_TASK)

@@ -2,20 +2,18 @@ package ru.hackaton.health_api.service;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.hackaton.health_api.data.dto.DoctorInfoDTO;
 import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
 import ru.hackaton.health_api.data.dto.HospitalDTO;
-import ru.hackaton.health_api.data.dto.PatientInfoDTO;
 import ru.hackaton.health_api.data.dto.TasksDTO;
+import ru.hackaton.health_api.data.dto.UserInfoDTO;
 import ru.hackaton.health_api.data.entities.DoctorScheduleEntity;
 import ru.hackaton.health_api.data.entities.HospitalEntity;
 import ru.hackaton.health_api.data.entities.TasksEntity;
-import ru.hackaton.health_api.data.repo.DoctorInfoRepo;
 import ru.hackaton.health_api.data.repo.DoctorScheduleRepo;
 import ru.hackaton.health_api.data.repo.HospitalRepo;
-import ru.hackaton.health_api.data.repo.PatientInfoRepo;
 import ru.hackaton.health_api.data.repo.TasksRepo;
 import ru.hackaton.health_api.data.repo.UserCredentialRepo;
+import ru.hackaton.health_api.data.repo.UserInfoRepo;
 import ru.hackaton.health_api.exceptions.MyAlreadyCreatedException;
 
 import java.time.LocalDate;
@@ -25,21 +23,18 @@ import java.util.stream.Collectors;
 @Component
 public class HealthApiService implements HealthApiClient {
 
-    private DoctorInfoRepo doctorInfoRepo;
-    private PatientInfoRepo patientInfoRepo;
+    private UserInfoRepo userInfoRepo;
     private DoctorScheduleRepo doctorScheduleRepo;
     private HospitalRepo hospitalRepo;
     private TasksRepo tasksRepo;
     private UserCredentialRepo userCredentialRepo;
 
-    public HealthApiService(DoctorInfoRepo doctorInfoRepo,
-                            PatientInfoRepo patientInfoRepo,
+    public HealthApiService(UserInfoRepo userInfoRepo,
                             DoctorScheduleRepo doctorScheduleRepo,
                             HospitalRepo hospitalRepo,
                             TasksRepo tasksRepo,
                             UserCredentialRepo userCredentialRepo) {
-        this.doctorInfoRepo = doctorInfoRepo;
-        this.patientInfoRepo = patientInfoRepo;
+        this.userInfoRepo = userInfoRepo;
         this.doctorScheduleRepo = doctorScheduleRepo;
         this.hospitalRepo = hospitalRepo;
         this.tasksRepo = tasksRepo;
@@ -52,20 +47,18 @@ public class HealthApiService implements HealthApiClient {
         }
     }
 
-    @Override
-    @Transactional
-    public void registerPatient(PatientInfoDTO input) {
-        checkUserAlreadyExists(input.getEmail());
-        userCredentialRepo.save(input.convertToUserCredentialEntity());
-        patientInfoRepo.save(input.convertToPatientEntity());
+    private void checkTaskExists(int taskId) {
+        if (!tasksRepo.findById(taskId).isPresent()) {
+            throw new MyAlreadyCreatedException("task doesn't exist");
+        }
     }
 
     @Override
     @Transactional
-    public void registerDoctor(DoctorInfoDTO input) {
+    public void registerUser(UserInfoDTO input) {
         checkUserAlreadyExists(input.getEmail());
         userCredentialRepo.save(input.convertToUserCredentialEntity());
-        doctorInfoRepo.save(input.convertToDoctorInfoEntity());
+        userInfoRepo.save(input.convertToUserInfoEntity());
     }
 
     @Override
@@ -90,14 +83,6 @@ public class HealthApiService implements HealthApiClient {
                         .map(DoctorScheduleEntity::convertToDto)
                         .collect(Collectors.toList());
 
-//        Map<Integer, DoctorEntity> doctors = new HashMap<>();
-//
-//        scheduleDtoList.stream()
-//                .map(DoctorScheduleDto::getDoctorId)
-//                .forEach(id -> doctors.put(id, doctorRepo.findById(id).get()));
-//
-//        scheduleDtoList.forEach(dto -> dto.setDoctorName(doctors.get(dto.getDoctorId()).getName()));
-
         return scheduleDtoList;
     }
 
@@ -109,8 +94,8 @@ public class HealthApiService implements HealthApiClient {
     }
 
     @Override
-    public List<TasksDTO> getAllByPatientOmsAndActive(int patientOms, boolean active) {
-        return tasksRepo.findAllByPatientOmsAndActive(patientOms, active).stream()
+    public List<TasksDTO> getAllByPatientIdAndActive(int patientId, boolean active) {
+        return tasksRepo.findAllByPatientIdAndActive(patientId, active).stream()
                 .map(TasksEntity::convertToDto)
                 .collect(Collectors.toList());
     }
@@ -118,12 +103,14 @@ public class HealthApiService implements HealthApiClient {
     @Override
     @Transactional
     public void setDoctorComment(int taskId, String doctorComment) {
+        checkTaskExists(taskId);
         tasksRepo.setDoctorComment(taskId, doctorComment);
     }
 
     @Override
     @Transactional
     public void closeTask(int taskId) {
+        checkTaskExists(taskId);
         tasksRepo.closeTask(taskId);
     }
 }

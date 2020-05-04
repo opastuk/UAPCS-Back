@@ -27,8 +27,8 @@ public class TasksEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "patient_oms", nullable = false)
-    private Integer patientOms;
+    @Column(name = "patient_id", nullable = false)
+    private Integer patientId;
 
     @Column(name = "doctor_id", nullable = false)
     private Integer doctorId;
@@ -45,7 +45,7 @@ public class TasksEntity {
     public TasksDTO convertToDto() {
         return TasksDTO.builder()
                 .id(id)
-                .patientOms(patientOms)
+                .patientId(patientId)
                 .doctorId(doctorId)
                 .date(date)
                 .description(description)

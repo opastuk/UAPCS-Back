@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ru.hackaton.health_api.data.entities.PatientInfoEntity;
 import ru.hackaton.health_api.data.entities.UserCredentialEntity;
+import ru.hackaton.health_api.data.entities.UserInfoEntity;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -17,24 +17,19 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Builder
-public class PatientInfoDTO {
+public class UserInfoDTO {
     @NotNull
-    @NotEmpty
-    private String omsPolis;
+    private Integer id;
 
-    @NotNull
     @NotEmpty
+    @NotNull
     private String name;
 
     @NotNull
     private LocalDate birthDate;
 
-    @NotNull
     @NotEmpty
-    private String address;
-
     @NotNull
-    @NotEmpty
     @Email
     private String email;
 
@@ -42,18 +37,25 @@ public class PatientInfoDTO {
     @NotEmpty
     private String password;
 
-    @NotNull
     @NotEmpty
+    @NotNull
     private String mobilePhone;
 
-    public PatientInfoEntity convertToPatientEntity() {
-        return PatientInfoEntity.builder()
-                .omsPolis(omsPolis)
+    @NotNull
+    private Integer role;
+
+    @NotNull
+    private Integer hospitalId;
+
+    public UserInfoEntity convertToUserInfoEntity() {
+        return UserInfoEntity.builder()
+                .id(id)
                 .name(name)
                 .birthDate(birthDate)
-                .address(address)
                 .email(email)
                 .mobilePhone(mobilePhone)
+                .hospitalId(role != 1 ? 0 : hospitalId)
+                .role(role)
                 .build();
     }
 
@@ -61,7 +63,7 @@ public class PatientInfoDTO {
         return UserCredentialEntity.builder()
                 .email(email)
                 .password(password)
-                .role(2)
+                .role(role)
                 .build();
     }
 }

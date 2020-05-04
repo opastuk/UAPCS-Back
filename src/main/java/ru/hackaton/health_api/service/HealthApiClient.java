@@ -1,19 +1,16 @@
 package ru.hackaton.health_api.service;
 
-import ru.hackaton.health_api.data.dto.DoctorInfoDTO;
 import ru.hackaton.health_api.data.dto.DoctorScheduleDTO;
 import ru.hackaton.health_api.data.dto.HospitalDTO;
-import ru.hackaton.health_api.data.dto.PatientInfoDTO;
 import ru.hackaton.health_api.data.dto.TasksDTO;
+import ru.hackaton.health_api.data.dto.UserInfoDTO;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface HealthApiClient {
 
-    void registerPatient(PatientInfoDTO input);
-
-    void registerDoctor(DoctorInfoDTO input);
+    void registerUser(UserInfoDTO input);
 
     void registerTask(TasksDTO input);
 
@@ -23,7 +20,7 @@ public interface HealthApiClient {
 
     List<TasksDTO> getAllByDoctorIdAndDateAndActive(int doctorId, LocalDate date, boolean active);
 
-    List<TasksDTO> getAllByPatientOmsAndActive(int patientOms, boolean active);
+    List<TasksDTO> getAllByPatientIdAndActive(int patientId, boolean active);
 
     void setDoctorComment(int taskId, String doctorComment);
 

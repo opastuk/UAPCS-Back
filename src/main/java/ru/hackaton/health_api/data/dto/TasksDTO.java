@@ -21,7 +21,7 @@ public class TasksDTO {
     private Integer id;
 
     @NotNull
-    private Integer patientOms;
+    private Integer patientId;
 
     @NotNull
     private Integer doctorId;
@@ -33,18 +33,14 @@ public class TasksDTO {
     @NotNull
     private String description;
 
-    @NotNull
     private boolean active = true;
-
     private String doctorComment;
-
-    @NotNull
     private boolean viewed = false;
 
     public TasksEntity convertToEntity() {
         return TasksEntity.builder()
                 .id(id)
-                .patientOms(patientOms)
+                .patientId(patientId)
                 .doctorId(doctorId)
                 .date(date)
                 .description(description)

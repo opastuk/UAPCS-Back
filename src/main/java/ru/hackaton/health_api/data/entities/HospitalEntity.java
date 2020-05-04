@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Getter
 @Entity
 @Builder
-@Table(name = "hospital", schema = "health_api")
+@Table(name = "hospital_info", schema = "health_api")
 public class HospitalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

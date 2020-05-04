@@ -14,8 +14,8 @@ public interface TasksRepo extends CrudRepository<TasksEntity, Integer> {
             "and e.date = :date and e.active = :active")
     List<TasksEntity> findAllByDoctorIdAndDateAndActive(int doctorId, LocalDate date, boolean active);
 
-    @Query("select e from TasksEntity e where e.patientOms = :patientOms and e.active = :active")
-    List<TasksEntity> findAllByPatientOmsAndActive(int patientOms, boolean active);
+    @Query("select e from TasksEntity e where e.patientId = :patientId and e.active = :active")
+    List<TasksEntity> findAllByPatientIdAndActive(int patientId, boolean active);
 
     @Modifying
     @Query("update TasksEntity e set e.doctorComment = :comment, e.viewed = true where e.id = :id")
